@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+session_start();
+header('Content-Type: application/json; charset=utf-8');
+function out(int $code,array $data): never { http_response_code($code); echo json_encode($data); exit; }
+$key=getenv('BLACKCAT_API_KEY') ?: '';
+if($key==='') out(503,['success'=>false,'message'=>'Gateway ainda não configurado no servidor.']);
+if(($_GET['action']??'')!=='create') out(404,['success'=>false,'message'=>'Ação inválida.']);
+if($_SERVER['REQUEST_METHOD']!=='POST') out(405,['success'=>false,'message'=>'Método inválido.']);
+$input=json_decode(file_get_contents('php://input') ?: '',true);
+if(!is_array($input)) out(400,['success'=>false,'message'=>'Dados inválidos.']);
+$sizes=['54/XS','56/S','58/M','60/L','62/XL'];
+$size=(string)($input['size']??'');
+if(!in_array($size,$sizes,true)) out(422,['success'=>false,'message'=>'Selecione um tamanho válido.']);
+$name=trim((string)($input['name']??''));$email=trim((string)($input['email']??''));$phone=preg_replace('/\D/','',(string)($input['phone']??''));$cpf=preg_replace('/\D/','',(string)($input['cpf']??''));
+$street=trim((string)($input['street']??''));$number=trim((string)($input['number']??''));$neighborhood=trim((string)($input['neighborhood']??''));$city=trim((string)($input['city']??''));$state=strtoupper(trim((string)($input['state']??'')));$zip=preg_replace('/\D/','',(string)($input['zipCode']??''));
+if(strlen($name)<5||!filter_var($email,FILTER_VALIDATE_EMAIL)||strlen($cpf)!==11||strlen($phone)<10||strlen($zip)!==8||!$street||!$number||!$neighborhood||!$city||!preg_match('/^[A-Z]{2}$/',$state)) out(422,['success'=>false,'message'=>'Confira os dados do comprador e endereço.']);
+$payload=['amount'=>37990,'currency'=>'BRL','paymentMethod'=>'pix','items'=>[['title'=>'Capacete LS2 Classic Draze Vermelho - '.$size,'unitPrice'=>37990,'quantity'=>1,'tangible'=>true]],'customer'=>['name'=>$name,'email'=>$email,'phone'=>$phone,'document'=>['number'=>$cpf,'type'=>'cpf']],'shipping'=>['name'=>$name,'street'=>$street,'number'=>$number,'neighborhood'=>$neighborhood,'city'=>$city,'state'=>$state,'zipCode'=>$zip],'pix'=>['expiresInDays'=>1],'externalRef'=>'PC-'.bin2hex(random_bytes(5))];
+$ch=curl_init('https://api.blackcatoficial.com/api/sales/create-sale');
+curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>json_encode($payload),CURLOPT_HTTPHEADER=>['Content-Type: application/json','X-API-Key: '.$key],CURLOPT_TIMEOUT=>25]);
+$raw=curl_exec($ch);$status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);curl_close($ch);$result=json_decode((string)$raw,true);
+if($status<200||$status>=300||!is_array($result)||empty($result['success'])) out(502,['success'=>false,'message'=>'Não foi possível gerar o Pix. Tente novamente.']);
+$data=$result['data']??[];$payment=$data['paymentData']??[];
+out(200,['success'=>true,'transactionId'=>$data['transactionId']??null,'paymentData'=>['qrCodeBase64'=>$payment['qrCodeBase64']??null,'copyPaste'=>$payment['copyPaste']??$payment['qrCode']??null]]);
