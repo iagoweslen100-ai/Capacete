@@ -5,6 +5,12 @@ if (is_file(__DIR__.'/config.local.php')) require_once __DIR__.'/config.local.ph
 header('Content-Type: application/json; charset=utf-8');
 function out(int $code,array $data): never { http_response_code($code); echo json_encode($data); exit; }
 $key=getenv('BLACKCAT_API_KEY') ?: '';
+function cpfValido(string $cpf): bool {
+ $cpf=preg_replace('/\\D/','',$cpf) ?? '';
+ if(!cpfValido($cpf) || preg_match('/^(\\d)\\1{10}$/',$cpf)) return false;
+ for($t=9;$t<11;$t++){ $s=0; for($i=0;$i<$t;$i++) $s+=(int)$cpf[$i]*(($t+1)-$i); $d=((10*$s)%11)%10; if((int)$cpf[$t]!==$d) return false; }
+ return true;
+}
 if($key==='') out(503,['success'=>false,'message'=>'Gateway ainda não configurado no servidor.']);
 if(($_GET['action']??'')!=='create') out(404,['success'=>false,'message'=>'Ação inválida.']);
 if($_SERVER['REQUEST_METHOD']!=='POST') out(405,['success'=>false,'message'=>'Método inválido.']);
