@@ -4,6 +4,12 @@ if(cfg.page==='home'){
  let chosen='';
  const buttons=[...document.querySelectorAll('.size-option')];
  const buy=document.getElementById('buy-button');
+ const heroImage=document.querySelector('.product-stage img');
+ document.querySelectorAll('.thumb').forEach((thumb,index)=>thumb.addEventListener('click',()=>{
+  heroImage.src=thumb.dataset.image;
+  document.querySelectorAll('.thumb').forEach(t=>t.classList.toggle('active',t===thumb));
+  const counter=document.querySelector('.visual-caption span');if(counter)counter.textContent='0'+(index+1)+' / 04';
+ }));
  buttons.forEach(btn=>btn.addEventListener('click',()=>{
   chosen=btn.dataset.size;
   buttons.forEach(b=>b.classList.toggle('selected',b===btn));
