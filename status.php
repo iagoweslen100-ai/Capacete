@@ -11,6 +11,6 @@ $key=getenv('BLACKCAT_API_KEY') ?: '';
 if($key==='') answer(503,['success'=>false,'message'=>'Gateway não configurado.']);
 $ch=curl_init('https://api.blackcatoficial.com/api/sales/'.rawurlencode($transaction).'/status');
 curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_HTTPHEADER=>['X-API-Key: '.$key,'Accept: application/json'],CURLOPT_TIMEOUT=>15,CURLOPT_SSL_VERIFYPEER=>true,CURLOPT_SSL_VERIFYHOST=>2]);
-$raw=curl_exec($ch);$http=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);curl_close($ch);$result=json_decode((string)$raw,true);
-if($http!==200||!is_array($result)||empty($result['success'])) answer(502,['success'=>false,'message'=>'Não foi possível consultar o pagamento.']);
+$raw=curl_exec($ch);$http=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);$curlError=curl_error($ch);curl_close($ch);$result=json_decode((string)$raw,true);
+if($raw===false||$http!==200||!is_array($result)||empty($result['success'])) answer(502,['success'=>false,'message'=>'Não foi possível consultar o pagamento.']);
 answer(200,['success'=>true,'status'=>$result['data']['status']??'PENDING']);
