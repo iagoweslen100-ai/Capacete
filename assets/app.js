@@ -41,15 +41,15 @@ if(cfg.page==='checkout'){
     await navigator.clipboard.writeText(document.getElementById('pix-copy').value);
     document.getElementById('copy-feedback').textContent='Código Pix copiado.';
    });
-   poll(json.orderId,json.transactionId);
+   poll(json.transactionId);
    result.scrollIntoView({behavior:'smooth',block:'start'});
   }catch(err){error.textContent=err.message;pay.disabled=false;pay.textContent='GERAR PIX DE R$ 379,90'}
  });
- async function poll(order,transaction){
+ async function poll(transaction){
   const el=document.getElementById('payment-status');
   for(let i=0;i<40;i++){
    try{
-    const r=await fetch('api.php?action=status&order='+encodeURIComponent(order)+'&transaction='+encodeURIComponent(transaction));
+    const r=await fetch('status.php?transaction='+encodeURIComponent(transaction));
     const j=await r.json();
     if(j.success&&j.status==='PAID'){el.textContent='Pagamento confirmado! A Prime Capacetes recebeu seu pedido.';return}
     if(j.success&&['CANCELLED','REFUNDED'].includes(j.status)){el.textContent='Este Pix foi cancelado ou expirou. Fale com nosso atendimento.';return}
