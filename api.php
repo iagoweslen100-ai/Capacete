@@ -20,5 +20,12 @@ $ch=curl_init('https://api.blackcatoficial.com/api/sales/create-sale');
 curl_setopt_array($ch,[CURLOPT_RETURNTRANSFER=>true,CURLOPT_POST=>true,CURLOPT_POSTFIELDS=>json_encode($payload),CURLOPT_HTTPHEADER=>['Content-Type: application/json','X-API-Key: '.$key],CURLOPT_TIMEOUT=>25]);
 $raw=curl_exec($ch);$status=(int)curl_getinfo($ch,CURLINFO_HTTP_CODE);curl_close($ch);$result=json_decode((string)$raw,true);
 if($status<200||$status>=300||!is_array($result)||empty($result['success'])) out(502,['success'=>false,'message'=>'Não foi possível gerar o Pix. Tente novamente.']);
-$data=$result['data']??[];$payment=$data['paymentData']??[];
-out(200,['success'=>true,'transactionId'=>$data['transactionId']??null,'paymentData'=>['qrCodeBase64'=>$payment['qrCodeBase64']??null,'copyPaste'=>$payment['copyPaste']??$payment['qrCode']??null]]);
+$data=$result['data']??[];$payment=$data['paymentData']??[];$transaction=(string)($data['transactionId']??'');
+if($transaction==='') out(502,['success'=>false,'message'=>'O gateway não retornou o identificador da transação.']);
+$_SESSION['last_transaction']=$transaction;
+$dir=__DIR__.'/storage';if(!is_dir($dir))mkdir($dir,0700,true);
+$file=$dir.'/orders.json';$orders=[];
+if(is_file($file)){ $saved=json_decode((string)file_get_contents($file),true);if(is_array($saved))$orders=$saved; }
+$orders[$transaction]=['transactionId'=>$transaction,'status'=>$data['status']??'PENDING','amount'=>37990,'size'=>$size,'customer'=>['name'=>$name,'email'=>$email,'phone'=>$phone,'cpf'=>$cpf],'shipping'=>['street'=>$street,'number'=>$number,'neighborhood'=>$neighborhood,'city'=>$city,'state'=>$state,'zipCode'=>$zip],'createdAt'=>date(DATE_ATOM)];
+$tmp=$file.'.tmp';file_put_contents($tmp,json_encode($orders,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT),LOCK_EX);@chmod($tmp,0600);rename($tmp,$file);
+out(200,['success'=>true,'transactionId'=>$transaction,'paymentData'=>['qrCodeBase64'=>$payment['qrCodeBase64']??null,'copyPaste'=>$payment['copyPaste']??$payment['qrCode']??null]]);
