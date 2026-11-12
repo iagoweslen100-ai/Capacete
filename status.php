@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 session_start();
+if (is_file(__DIR__.'/config.local.php')) require_once __DIR__.'/config.local.php';
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store');
 function answer(int $code,array $data): never { http_response_code($code); echo json_encode($data); exit; }
