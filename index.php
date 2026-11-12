@@ -18,7 +18,7 @@ $price = '379,90';
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-<header class="site-header"><a class="brand" href="index.php" aria-label="Prime Capacetes"><span class="brand-mark">P</span><span>PRIME<span class="brand-light">CAPACETES</span></span></a><div class="header-right"><span class="header-years">8 ANOS NO MERCADO</span><a href="https://wa.me/" class="header-contact" aria-label="Atendimento WhatsApp">ATENDIMENTO</a></div></header>
+<header class="site-header"><a class="brand" href="index.php" aria-label="Prime Capacetes"><span class="brand-mark">P</span><span>PRIME<span class="brand-light">CAPACETES</span></span></a><div class="header-right"><span class="header-years">8 ANOS NO MERCADO</span><span class="header-contact">ATENDIMENTO</span></div></header>
 <?php if ($page === 'home'): ?>
 <main>
 <div class="delivery-strip"><span class="pulse"></span> RECIFE E REGIÃO <b>·</b> ENTREGA EM ATÉ 24H APÓS PAGAMENTO APROVADO</div>
@@ -31,7 +31,12 @@ $price = '379,90';
 <button type="button" class="size-option" data-size="54/XS">54<small>XS</small></button><button type="button" class="size-option" data-size="56/S">56<small>S</small></button><button type="button" class="size-option" data-size="58/M">58<small>M</small></button><button type="button" class="size-option" data-size="60/L">60<small>L</small></button><button type="button" class="size-option" data-size="62/XL">62<small>XL</small></button>
 </div><p class="size-error" id="size-error" aria-live="polite">Selecione um tamanho para prosseguir.</p><button class="btn-primary" id="buy-button" disabled>PROSSEGUIR COM COMPRA <span>→</span></button><div class="secure-note">⌑ Seus dados são protegidos durante a compra</div></div>
 </div>
-<div class="hero-visual"><div class="visual-label">DRAZE <span>RED / BLACK</span></div><div class="product-stage"><div class="stage-glow"></div><img src="https://loja.jrspeedracing.com.br/wp-content/uploads/2021/03/LS2-CLASSIC-FF358-DRAZE-BLACK-RED-1-600x600.jpg" alt="Capacete LS2 Classic Draze preto, branco e vermelho" onerror="this.style.display='none';document.getElementById('fallback-product').style.display='grid'"><div id="fallback-product" class="fallback-product">LS2<br><b>DRAZE</b><small>BLACK / RED</small></div></div><div class="visual-caption"><span>01 / 03</span><span>DESIGN QUE NÃO PASSA DESPERCEBIDO</span></div></div>
+<div class="hero-visual"><div class="visual-label">DRAZE <span>RED / BLACK</span></div><div class="product-stage"><div class="stage-glow"></div><img src="https://loja.jrspeedracing.com.br/wp-content/uploads/2021/03/LS2-CLASSIC-FF358-DRAZE-BLACK-RED-1-600x600.jpg" alt="Capacete LS2 Classic Draze preto, branco e vermelho" onerror="this.style.display='none';document.getElementById('fallback-product').style.display='grid'"><div id="fallback-product" class="fallback-product">LS2<br><b>DRAZE</b><small>BLACK / RED</small></div></div><div class="product-thumbs" aria-label="Galeria do capacete">
+<button type="button" class="thumb active" data-image="https://loja.jrspeedracing.com.br/wp-content/uploads/2021/03/LS2-CLASSIC-FF358-DRAZE-BLACK-RED-1-600x600.jpg" aria-label="Vista lateral"></button>
+<button type="button" class="thumb" data-image="https://loja.jrspeedracing.com.br/wp-content/uploads/2021/03/LS2-CLASSIC-FF358-DRAZE-BLACK-RED-4-600x600.jpg" aria-label="Vista frontal"></button>
+<button type="button" class="thumb" data-image="https://loja.jrspeedracing.com.br/wp-content/uploads/2021/03/LS2-CLASSIC-FF358-DRAZE-BLACK-RED-5-600x600.jpg" aria-label="Vista traseira"></button>
+<button type="button" class="thumb" data-image="https://loja.jrspeedracing.com.br/wp-content/uploads/2021/03/LS2-CLASSIC-FF358-DRAZE-BLACK-RED-2-600x600.jpg" aria-label="Outro ângulo"></button>
+</div><div class="visual-caption"><span>01 / 04</span><span>DESIGN QUE NÃO PASSA DESPERCEBIDO</span></div></div>
 </section>
 <section class="trust-band"><div class="wrap trust-grid"><div><b>08</b><span>ANOS DE MERCADO</span></div><div><b>24H</b><span>ENTREGA EM RECIFE E REGIÃO*</span></div><div><b>PIX</b><span>PAGAMENTO DIGITAL</span></div><div><b>LS2</b><span>MARCA RECONHECIDA</span></div></div><p class="trust-foot">*Prazo de até 24 horas após a aprovação do pagamento, para Recife e região, conforme disponibilidade e confirmação do endereço.</p></section>
 <section class="features wrap"><div class="section-kicker">DETALHES QUE FAZEM A DIFERENÇA</div><h2>Feito para acompanhar<br><em>seu ritmo.</em></h2><div class="feature-grid">
