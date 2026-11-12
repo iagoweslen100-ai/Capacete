@@ -1,0 +1,5 @@
+Options -Indexes
+DirectoryIndex index.php
+<FilesMatch "^(config\.local\.php|\.env|\.gitignore)$">
+  Require all denied
+</FilesMatch>
