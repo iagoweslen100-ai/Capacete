@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 session_start();
+if (is_file(__DIR__.'/config.local.php')) require_once __DIR__.'/config.local.php';
 header('Content-Type: application/json; charset=utf-8');
 function out(int $code,array $data): never { http_response_code($code); echo json_encode($data); exit; }
 $key=getenv('BLACKCAT_API_KEY') ?: '';
@@ -26,6 +27,6 @@ $_SESSION['last_transaction']=$transaction;
 $dir=__DIR__.'/storage';if(!is_dir($dir))mkdir($dir,0700,true);
 $file=$dir.'/orders.json';$orders=[];
 if(is_file($file)){ $saved=json_decode((string)file_get_contents($file),true);if(is_array($saved))$orders=$saved; }
-$orders[$transaction]=['transactionId'=>$transaction,'status'=>$data['status']??'PENDING','amount'=>37990,'size'=>$size,'customer'=>['name'=>$name,'email'=>$email,'phone'=>$phone,'cpf'=>$cpf],'shipping'=>['street'=>$street,'number'=>$number,'neighborhood'=>$neighborhood,'city'=>$city,'state'=>$state,'zipCode'=>$zip],'createdAt'=>date(DATE_ATOM)];
+$orders[$transaction]=['transactionId'=>$transaction,'status'=>$data['status']??'PENDING','amount'=>37990,'size'=>$size,'customer'=>['name'=>$name,'email'=>$email,'phone'=>$phone,'cpfLast4'=>substr($cpf,-4)],'shipping'=>['street'=>$street,'number'=>$number,'neighborhood'=>$neighborhood,'city'=>$city,'state'=>$state,'zipCode'=>$zip],'createdAt'=>date(DATE_ATOM)];
 $tmp=$file.'.tmp';file_put_contents($tmp,json_encode($orders,JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT),LOCK_EX);@chmod($tmp,0600);rename($tmp,$file);
 out(200,['success'=>true,'transactionId'=>$transaction,'paymentData'=>['qrCodeBase64'=>$payment['qrCodeBase64']??null,'copyPaste'=>$payment['copyPaste']??$payment['qrCode']??null]]);
